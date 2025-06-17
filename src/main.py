@@ -101,7 +101,7 @@ async def get_fill_rate(domain: str):
     SELECT
         publisher_id,
         domain,
-        ad_unit_id_feature as ad_init_id,
+        ad_unit_id_feature as ad_unit_id,
         sum(ad_requests_est) as ad_requests_est,
         sum(impressions_est) as impressions_est,
         safe_divide(sum(impressions_est),sum(ad_requests_est)) as fill_rate
@@ -184,12 +184,13 @@ async def get_domain_history(domain: str):
       safe_divide(
         sum(ad_rev_oz_net_usd_est),
         sum(impressions_est)
-      ) *1000 as impression_cpm,
+      ) *1000 as impression_cpm
 
     from ozone.fct_smart_bidstream__root
     where date(date_hour) = current_date - 1
     and domain = @domain
     group by all
+    having ad_requests_est >= 10000    
     """
     
     try:
