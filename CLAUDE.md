@@ -176,7 +176,7 @@ Get attention metrics from the last 7 days for a specific domain.
     {
       "domain": "example.com",
       "publisher_id": "12345",
-      "tracker_clicks": 1500.0,
+      "tracker_ad_clicks": 1500.0,
       "vie_imps": 2500000.0
     }
   ],

@@ -48,8 +48,12 @@ class FillRateResponse(BaseModel):
 class AttentionRecord(BaseModel):
     domain: Optional[str] = None
     publisher_id: Optional[str] = None
-    tracker_clicks: Optional[float] = None
+    tracker_ad_clicks: Optional[float] = None
+    tracker_ad_hovers: Optional[float] = None
     vie_imps: Optional[float] = None
+    vie_pct: Optional[float] = None
+    hover_pct: Optional[float] = None
+    click_pct: Optional[float] = None
 
 
 class AttentionResponse(BaseModel):
