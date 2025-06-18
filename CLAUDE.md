@@ -31,13 +31,27 @@ A Python FastAPI server that acts as a BigQuery client for extracting data from 
 
 ### API Endpoints
 
-- `POST /query`: Execute SQL queries with optional parameters
+#### BigQuery Endpoints
+- `POST /query`: Execute custom SQL queries with optional parameters
+  - Body: `{"query": "SELECT * FROM table", "parameters": {"param": "value"}}`
 - `GET /datasets`: List all datasets in the project
-- `GET /datasets/{dataset_id}/tables`: List tables in a dataset
-- `GET /datasets/{dataset_id}/tables/{table_id}/schema`: Get table schema
-- `GET /fill-rate`: Get fill rate data from yesterday for a specific domain
-- `GET /attention`: Get attention metrics from the last 30 days
+- `GET /datasets/{dataset_id}/tables`: List tables in a specific dataset
+- `GET /datasets/{dataset_id}/tables/{table_id}/schema`: Get schema for a specific table
+
+#### Domain Analytics Endpoints
+- `GET /fill-rate?domain={domain}`: Get fill rate data from 30 days ago for a specific domain
+  - Returns ad requests, impressions, and fill rates by ad unit
+- `GET /attention?domain={domain}`: Get attention metrics from the last 30 days
+  - Returns tracker clicks and viewable impressions for the domain
+- `GET /domain-history?domain={domain}&ad_unit_ids={unit1}&ad_unit_ids={unit2}`: Get domain performance history from yesterday
+  - Optional `ad_unit_ids` parameter to filter by specific ad units
+  - Returns bid rates, CPMs, win rates, fill rates, and revenue data
+- `GET /domain-site-info?domain={domain}`: Get publisher information from Sincera database
+  - Returns publisher details, performance metrics, and supply chain data from `sincera_data.db`
+
+#### System Endpoints
 - `GET /health`: Health check with BigQuery connectivity status
+- `GET /`: Root endpoint returning API status
 
 ### Example Usage
 

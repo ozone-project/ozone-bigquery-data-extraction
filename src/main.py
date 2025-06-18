@@ -134,10 +134,23 @@ async def get_attention_metrics(domain: str):
     SELECT 
         dv_delivery_domain as domain, 
         publisher_id, 
-        sum(tracker_ad_clicks) as tracker_clicks, 
-        sum(dv_net_iab_viewable_imp) as vie_imps
+        sum(tracker_ad_clicks) as tracker_ad_clicks,
+        sum(tracker_ad_hovers) as tracker_ad_hovers,
+        sum(dv_net_iab_viewable_imp) as vie_imps,
+        safe_divide(
+          sum(dv_net_iab_viewable_imp),
+          sum(dv_net_measured_imp)
+        ) as vie_pct,
+        safe_divide(
+          sum(tracker_ad_clicks),
+          sum(dv_net_measured_imp)
+        ) as click_pct,
+        safe_divide(
+          sum(tracker_ad_hovers),
+          sum(dv_net_measured_imp)
+        ) as hover_pct,
     FROM `ozpr-data-engineering-prod.prod_de_attention_metrics.fct_attention_metrics__beeswax`
-    WHERE date(ts) >= current_date - 30
+    WHERE date(ts) >= current_date - 7
         AND dv_delivery_domain is not null
         AND dv_delivery_domain = @domain
     GROUP BY ALL
@@ -193,7 +206,8 @@ async def get_domain_history(domain: str, ad_unit_ids: Optional[List[str]] = Que
 
     from ozone.fct_smart_bidstream__root
     where date(date_hour) = current_date - 1
-    and domain = @domain"""
+    and domain = @domain
+    """
     
     # Add ad_unit_ids filter if provided
     parameters = {"domain": domain}
